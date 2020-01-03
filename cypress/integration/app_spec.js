@@ -1,3 +1,13 @@
+/// <reference types="cypress" />
+
+// a custom assertion function
+// asserts the element is scrolled to the top of the viewport
+const expectScrolledIntoView = ($el) => {
+  const el = $el[0]
+  const win = el.ownerDocument.defaultView
+  expect(el.offsetTop).closeTo(win.scrollY, 1)
+}
+
 describe('PieChopper', function(){
   beforeEach(function(){
     // Visiting before each test ensures the app
@@ -79,14 +89,10 @@ describe('PieChopper', function(){
       // the windows scrollY we know its been scrolled to the top (within 1 px)
       cy.contains('button', 'Begin').click()
 
-      // https://on.cypress.io/invoke
-      // https://on.cypress.io/then
-      cy.get('#model-selection-section').invoke('offset').then(function(offset){
-          // using a cy.then here to create a closure of the offset
-
-          // https://on.cypress.io/window
-          cy.window().its('scrollY').should('closeTo', offset.top, 1)
-        })
+      // you can pass a custom assertion function into `should`
+      // this will retry until it passes or times out.
+      cy.get('#model-selection-section')
+        .should(expectScrolledIntoView)
     })
   })
 
@@ -157,12 +163,11 @@ describe('PieChopper', function(){
       // https://on.cypress.io/as
       cy.window().as('win')
       cy.get('#model-selection-section').contains('button', 'Continue').click()
-      cy.get('#contrib-section').invoke('offset').its('top')
-        .should(function(top){
-          // when we alias anything it becomes available inside of our
-          // test's context, allowing us to reference it directly
-          expect(top).to.eq(this.win.scrollY)
-        })
+
+      // you can pass a custom assertion function into `should`
+      // this will retry until it passes or times out.
+      cy.get('#contrib-section')
+        .should(expectScrolledIntoView)
     })
   })
 
