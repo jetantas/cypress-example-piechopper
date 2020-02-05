@@ -5,7 +5,7 @@
 const expectScrolledIntoView = ($el) => {
   const el = $el[0]
   const win = el.ownerDocument.defaultView
-  expect(el.offsetTop).closeTo(win.scrollY, 1)
+  expect(el.offsetTop).closeTo(win.scrollY, 2)
 }
 
 describe('PieChopper', function(){
@@ -23,7 +23,7 @@ describe('PieChopper', function(){
   // to make assertions throughout our test
   // we're going to use the should command
   // https://on.cypress.io/should
-  
+
 
   it('has correct title', function(){
     // https://on.cypress.io/title
